@@ -1,0 +1,81 @@
+
+body {
+	background: black;
+	color: yellow;
+	font-family: Gill Sans, Futura, Verdana, Arial, Helvetica, sans-serif;
+}
+
+div.svga {
+	width: 800px;
+}
+
+div.xga {
+	width: 980px;
+}
+
+div.xga2 {
+	width: 1024px;
+}
+
+div.narrow {
+	width:640px;
+}
+
+div.align_left {
+  text-align: left;
+}
+
+pre {
+	color: #AADDFF;
+}
+
+font.hilite {
+	color: #FF0000;
+	font-weight: bold;
+}
+
+font.note {
+	color: #00FF00;
+	font-size: 10pt;
+	font-style: italic;
+}
+
+a {
+	text-decoration: none;
+	color: #60A0FF;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:visited {
+	color: #00CAFF;
+}
+
+a.tiny {
+	color: #00FF00;
+	font-size: 10pt;
+}
+
+a.tiny:visited {
+	color: #00CAFF;
+}
+
+a.black {
+  color: #000000;
+}
+
+font.header {
+	color: yellow;
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+hr {
+  background: yellow;
+  color: yellow;
+  height: 1px;
+  border: 0px;
+}
+
