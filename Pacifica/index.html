@@ -18,6 +18,7 @@ document.getElementsByTagName("head")[0].appendChild(css);
 </head>
 <body>
 <center>
+<p><font class="note">All source code and backgrounds are my original work, but I do not own the copyright to all of the tile images.</font></p>
 <canvas width="1600" height="1000">Game Board</canvas>
 <script language="JavaScript">
 // preload images
@@ -25,13 +26,11 @@ for (let i = 1; i <= 36; i++) {
   document.write(`<img src="images/tiles/tile${i}.jpg" width="0" height="0"/>`);
 }
 window.onload = function () {
-  const layouts = get_layouts();
-  make_board(layouts.mahjongg_classic);
+  make_board(get_layout());
 }
 </script>
 <p>Score: <span id="score">0</span></p>
-<p><div id="status"></div></p>
-<p><font class="note">All source code and backgrounds are my original work, but I do not own the copyright to all of the tile images.</font></p>
+<p><div id="status" class="hilite">&nbsp;</div></p>
 </center>
 </body>
 </html>

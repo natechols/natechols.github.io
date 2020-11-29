@@ -96,7 +96,7 @@ function draw_tile (ctx, tile, images) {
   const x = tile.x;
   const y = tile.y;
   ctx.lineWidth = 4;
-  ctx.strokeRect(x, y, TILE_SIZE, TILE_SIZE);
+  ctx.strokeRect(x, y, TILE_SIZE - 2, TILE_SIZE - 2);
   // bottom and right tile sides in 3D
   ctx.beginPath();
   if (tile.isSelected) {
@@ -121,7 +121,7 @@ function draw_tile (ctx, tile, images) {
   ctx.lineTo(x + TILE_SIZE + OFFSET_3D, y + TILE_SIZE + OFFSET_3D);
   ctx.stroke();
   // tile image
-  ctx.drawImage(img, x, y);
+  ctx.drawImage(img, x, y, TILE_SIZE - 2, TILE_SIZE - 2);
   // selection highlight
   if (tile.isSelected) {
     ctx.fillStyle = SELECTED_HIGHLIGHT;
@@ -147,9 +147,10 @@ function is_inside (tile, x, y) {
 }
 
 function is_touching_side (tile, other) {
+  const J_MAX = other.j + 1;
   return (tile.idx !== other.idx &&
           tile.layer === other.layer &&
-          tile.j === other.j &&
+          is_overlap(tile.j, other.j) &&
           (tile.i === (other.i + 1) || tile.i === (other.i - 1)));
 }
 
@@ -166,9 +167,13 @@ function is_below (tile, other) {
 
 // yes this is N^2, because I'm feeling lazy
 function is_selectable(tile, others) {
-  const on_side = others.filter((other) => is_touching_side(tile, other));
+  const on_side = new Set(
+    others.filter(function (other) {
+      return is_touching_side(tile, other);
+    }).map((t) => t.i)
+  );
   const above = others.filter((other) => is_below(tile, other));
-  return on_side.length < 2 && above.length === 0;
+  return on_side.size < 2 && above.length === 0;
 }
 
 function process_click(board, x, y) {
@@ -187,17 +192,30 @@ function process_click(board, x, y) {
       break;
     }
   }
-  board.tiles.forEach(function (tile) {
+  activeTiles.forEach(function (tile) {
     if (clicked === null ||
         (clicked !== null &&
-         (tile.idx !== clicked.idx && tile.tileId !== clicked.tileId))) {
+         tile.idx !== clicked.idx &&
+         (tile.tileId !== clicked.tileId || !clicked.isSelected))) {
       tile.isSelected = false;
     }
   });
   draw_board(board);
 };
 
-function update_from_selection(board) {
+function set_status (msg) {
+  if (msg !== undefined) {
+    document.getElementById("status").textContent = msg;
+  } else {
+    document.getElementById("status").textContent = " ";
+  }
+};
+
+function set_score (score) {
+  document.getElementById("score").textContent = `${score}`;
+}
+
+function update_from_selection(board, cheatMode) {
   const selected = board.tiles.filter((t) => t.isSelected);
   if (selected.length === 2) {
     selected.forEach(function (tile) {
@@ -206,23 +224,46 @@ function update_from_selection(board) {
       board.score++;
     });
     draw_board(board);
-    document.getElementById("score").textContent = board.score;
+    set_score(board.score);
+  } else if (selected.length === 1 && cheatMode === true) {
+    const activeTiles = board.tiles.filter((t) => t.isActive);
+    const current = selected[0]
+    console.log("cheat mode activated!");
+    const possible = activeTiles.filter(function (t) {
+      return (t.idx != current.idx &&
+              t.tileId == current.tileId &&
+              is_selectable(t, activeTiles));
+    });
+    if (possible.length > 0) {
+      possible.forEach(function (tile) {
+        tile.isSelected = true;
+      });
+      draw_board(board);
+    } else {
+      set_status("No available matches");
+    }
+  } else if (selected.length > 2) {
+    console.log("clearing cheat mode");
+    selected.forEach((t) => t.isSelected = false);
+    draw_board(board);
   }
   const active = board.tiles.filter((t) => t.isActive);
   if (active.length === 0) {
-    document.getElementById("status").textContent = "YOU WON!  Reload to play again";
+    set_status("YOU WON!  Reload to play again");
   }
 };
 
 function setup_events(board) {
   function onMouseDown (evt) {
+    set_status();
     const rect = canvas.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
     console.log("Coordinate x: " + x,
                 "Coordinate y: " + y);
+    const cheatMode = event.getModifierState("Shift");
     process_click(board, x, y);
-    update_from_selection(board);
+    update_from_selection(board, cheatMode);
   };
   const canvas = document.querySelector("canvas");
   canvas.addEventListener("mousedown", onMouseDown);
@@ -234,8 +275,8 @@ const board = {
   "score": 0,
   "maxScore": 0
 };
-document.getElementById("status").textContent = "";
-document.getElementById("score").textContent = "0";
+set_status("Reload to generate a new board with random layout");
+set_score(0);
 setup_events(board);
 draw_board(board);
 };
