@@ -1,0 +1,37 @@
+<!--
+  this code is in the public domain, but the images may be copyrighted
+-->
+<html>
+<head>
+<title>Pacifica</title>
+<link rel="stylesheet" type="text/css" href="../main.css">
+<script src="Pacifica.js" language="JavaScript"></script>
+<script src="layouts.js" language="JavaScript"></script>
+<script language="JavaScript">
+// set a random background for the board
+const idx = 1 + Math.floor(Math.random() * 6);
+const style = `canvas { background-image: url('images/bg${idx}.jpeg'); }`;
+const css = document.createElement('style');
+css.appendChild(document.createTextNode(style));
+document.getElementsByTagName("head")[0].appendChild(css);
+</script>
+</head>
+<body>
+<center>
+<canvas width="1600" height="1000">Game Board</canvas>
+<script language="JavaScript">
+// preload images
+for (let i = 1; i <= 36; i++) {
+  document.write(`<img src="images/tiles/tile${i}.jpg" width="0" height="0"/>`);
+}
+window.onload = function () {
+  const layouts = get_layouts();
+  make_board(layouts.mahjongg_classic);
+}
+</script>
+<p>Score: <span id="score">0</span></p>
+<p><div id="status"></div></p>
+<p><font class="note">All source code and backgrounds are my original work, but I do not own the copyright to all of the tile images.</font></p>
+</center>
+</body>
+</html>
