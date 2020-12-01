@@ -1,15 +1,18 @@
 /** this source code is in the public domain
   * natechols 2020-11-28
   * inspired by the classic Mac game Mombasa
+  *
+  * changelog:
+  *   2020-11-28: initial version
+  *   2020-12-01: make number of images configurable
   */
 
 // the layout should be a 2d array of "tuples" (so technically a 3d array)
 // which represent tile positions as unit (i,j) coordinates (these can be
 // fractional, but usually in increments of 0.5).  the outer dimension of
 // the array represents layers, starting from the bottom.
-function make_board (layout) {
+function make_board (layout, numImages) {
 let tileIdx = 0;
-const N_IMAGES = 36;
 const ROWS = 14;
 const COLS = 8;
 const BOARD_BORDER_X = 0.5;
@@ -23,7 +26,7 @@ const SELECTED_LAYER_HIGHLIGHT = "#000000";
 
 function load_tile_images () {
   const images = [];
-  for (let i = 1; i <= N_IMAGES; i++) {
+  for (let i = 1; i <= numImages; i++) {
     const tileImg = new Image();
     tileImg.src = `images/tiles/tile${i}.jpg`;
     images.push(tileImg);
@@ -71,7 +74,7 @@ function make_tiles () {
     tileIds.push(tileId);
     tileIds.push(tileId);
     tileId++;
-    if (tileId >= N_IMAGES) {
+    if (tileId >= numImages) {
       tileId = 0;
     }
   }
