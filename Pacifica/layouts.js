@@ -91,5 +91,5 @@ const MOMBASA = [
   ]
 ];
 
-return [TURTLE, MOMBASA][Math.floor(Math.random() * 2)];
+return [TURTLE, MOMBASA][Math.floor(Math.random() * 1.5)];
 };

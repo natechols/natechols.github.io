@@ -19,7 +19,7 @@ document.getElementsByTagName("head")[0].appendChild(css);
 <body>
 <center>
 <p><font class="note">All source code and backgrounds are my original work, but I do not own the copyright to all of the tile images.</font></p>
-<canvas width="1600" height="1000">Game Board</canvas>
+<canvas>Game Board</canvas>
 <script language="JavaScript">
 // preload images
 const urlParams = new URLSearchParams(window.location.search);
@@ -31,7 +31,17 @@ for (let i = 1; i <= numImages; i++) {
   document.write(`<img src="images/tiles/tile${i}.jpg" width="0" height="0"/>`);
 }
 window.onload = function () {
-  make_board(get_layout(), numImages);
+  const width = window.innerWidth;
+  const height = window.innerHeight;
+  console.log(`${width}x${height}`);
+  const canvas = document.querySelector("canvas");
+  const canvasWidth = Math.min(width - 50, 1600);
+  const canvasHeight = Math.min(width / 1.6 - 80, 1000);
+  console.log(`${canvasWidth}x${canvasHeight}`);
+  canvas.width = canvasWidth;
+  canvas.height = canvasHeight;
+  const imageSize = canvasWidth / 16;
+  make_board(get_layout(), numImages, imageSize);
 }
 </script>
 <p>Score: <span id="score">0</span></p>

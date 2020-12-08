@@ -11,14 +11,13 @@
 // which represent tile positions as unit (i,j) coordinates (these can be
 // fractional, but usually in increments of 0.5).  the outer dimension of
 // the array represents layers, starting from the bottom.
-function make_board (layout, numImages) {
+function make_board (layout, numImages, tileSize) {
 let tileIdx = 0;
 const ROWS = 14;
 const COLS = 8;
 const BOARD_BORDER_X = 0.5;
 const BOARD_BORDER_Y = 1;
-const TILE_SIZE = 100;
-const OFFSET_3D = 10;
+const OFFSET_3D = tileSize / 10;
 const TILE_BORDER = "#000000";
 const LAYER_BORDERS = ["#404040", "#606060", "#808080", "#b0b0b0", "#e0e0e0"];
 const SELECTED_HIGHLIGHT = 'rgba(0, 0, 0, 0.5)'
@@ -36,7 +35,7 @@ function load_tile_images () {
 
 function to_screen_pos(n, layer, border) {
   const offset = layer * OFFSET_3D;
-  return (border * TILE_SIZE) + (n * TILE_SIZE) - offset;
+  return (border * tileSize) + (n * tileSize) - offset;
 };
 
 function make_tile (coords, layer, tileId) {
@@ -99,7 +98,7 @@ function draw_tile (ctx, tile, images) {
   const x = tile.x;
   const y = tile.y;
   ctx.lineWidth = 4;
-  ctx.strokeRect(x, y, TILE_SIZE - 2, TILE_SIZE - 2);
+  ctx.strokeRect(x, y, tileSize - 2, tileSize - 2);
   // bottom and right tile sides in 3D
   ctx.beginPath();
   if (tile.isSelected) {
@@ -108,27 +107,27 @@ function draw_tile (ctx, tile, images) {
     ctx.fillStyle = LAYER_BORDERS[tile.layer];
   }
   ctx.lineWidth = 2;
-  ctx.moveTo(x, y + TILE_SIZE);
-  ctx.lineTo(x + OFFSET_3D, y + TILE_SIZE + OFFSET_3D);
-  ctx.lineTo(x + TILE_SIZE + OFFSET_3D, y + TILE_SIZE + OFFSET_3D);
-  ctx.lineTo(x + TILE_SIZE + OFFSET_3D, y + OFFSET_3D);
-  ctx.lineTo(x + TILE_SIZE, y);
-  ctx.lineTo(x + TILE_SIZE, y + TILE_SIZE);
-  ctx.lineTo(x, y + TILE_SIZE);
+  ctx.moveTo(x, y + tileSize);
+  ctx.lineTo(x + OFFSET_3D, y + tileSize + OFFSET_3D);
+  ctx.lineTo(x + tileSize + OFFSET_3D, y + tileSize + OFFSET_3D);
+  ctx.lineTo(x + tileSize + OFFSET_3D, y + OFFSET_3D);
+  ctx.lineTo(x + tileSize, y);
+  ctx.lineTo(x + tileSize, y + tileSize);
+  ctx.lineTo(x, y + tileSize);
   ctx.closePath();
   ctx.fill();
   ctx.stroke();
   // lower right corner edge
   ctx.beginPath();
-  ctx.moveTo(x + TILE_SIZE, y + TILE_SIZE);
-  ctx.lineTo(x + TILE_SIZE + OFFSET_3D, y + TILE_SIZE + OFFSET_3D);
+  ctx.moveTo(x + tileSize, y + tileSize);
+  ctx.lineTo(x + tileSize + OFFSET_3D, y + tileSize + OFFSET_3D);
   ctx.stroke();
   // tile image
-  ctx.drawImage(img, x, y, TILE_SIZE - 2, TILE_SIZE - 2);
+  ctx.drawImage(img, x, y, tileSize - 2, tileSize - 2);
   // selection highlight
   if (tile.isSelected) {
     ctx.fillStyle = SELECTED_HIGHLIGHT;
-    ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);
+    ctx.fillRect(x, y, tileSize, tileSize);
   }
 };
 
@@ -144,8 +143,8 @@ function draw_board (board) {
 };
 
 function is_inside (tile, x, y) {
-  const X_MAX = tile.x + TILE_SIZE;
-  const Y_MAX = tile.y + TILE_SIZE;
+  const X_MAX = tile.x + tileSize;
+  const Y_MAX = tile.y + tileSize;
   return (x >= tile.x && x <= X_MAX && y >= tile.y && y < Y_MAX);
 }
 
