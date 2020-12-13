@@ -9,7 +9,7 @@
 <script src="layouts.js" language="JavaScript"></script>
 <script language="JavaScript">
 // set a random background for the board
-const idx = 1 + Math.floor(Math.random() * 6);
+const idx = 0;// 1 + Math.floor(Math.random() * 6);
 const style = `canvas { background-image: url('images/bg${idx}.jpeg'); }`;
 const css = document.createElement('style');
 css.appendChild(document.createTextNode(style));
@@ -18,7 +18,6 @@ document.getElementsByTagName("head")[0].appendChild(css);
 </head>
 <body>
 <center>
-<p><font class="note">All source code and backgrounds are my original work, but I do not own the copyright to all of the tile images.</font></p>
 <canvas>Game Board</canvas>
 <script language="JavaScript">
 // preload images
@@ -44,8 +43,7 @@ window.onload = function () {
   make_board(get_layout(), numImages, imageSize);
 }
 </script>
-<p>Score: <span id="score">0</span></p>
-<p><div id="status" class="hilite">&nbsp;</div></p>
+<p><font class="note">All source code and backgrounds are my original work, but I do not own the copyright to all of the tile images.</font></p>
 </center>
 </body>
 </html>
